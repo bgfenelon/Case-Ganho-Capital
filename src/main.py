@@ -1,5 +1,6 @@
 import sys
 import os
+import numpy as np
 
 # --- Corrige o path para permitir importações como src.domain.win_of_capital ---
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -36,8 +37,9 @@ def calculando_ganho_capital(operacao, valor, quantidade, preco_pd, acao_atual):
 
 if __name__ == "__main__":
     entrada_dados = [
-        {"operation": "buy", "unit_cost": 10.00, "quantity": 10000},
-        {"operation": "sell", "unit_cost": 20.00, "quantity": 5000}
+        {"operation": "buy", "unit_cost": 20.00, "quantity": 10},
+        {"operation": "sell", "unit_cost": 0.00, "quantity": 5},
+        {"operation": "buy", "unit_cost": 10.00, "quantity": 5},
     ]
 
     print("Calculando ganho de capital...\n")
@@ -64,3 +66,11 @@ if __name__ == "__main__":
 
     print("Resultado do cálculo:")
     print(resultados)
+
+    #quantidade preco ponderado - 20
+    #quantidade de acao atual - 5
+    #nova-media-ponderada = ((quantidade-de-acoes-atual * media-ponderada-atual) 
+    # + (quantidade-de-acoes-compradas * valor-de-compra)) 
+    # / (quantidade-de-acoes-atual + quantidade-de-acoes-compradas)
+    nova_media_ponderada = ((5.0 * 20.0) + ( 5 * 10.00)) / (5 + 5)
+    print("nova media ponderada --> ",np.average([20.0,10.0,10.0], weights=[10,5,5]))

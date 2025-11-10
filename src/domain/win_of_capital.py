@@ -32,21 +32,9 @@ class WinOfCapital:
             raise ValueError("A quantidade de ações não pode ser negativa.")
         self._current_actions = valor
 
-    # --- Método de cálculo ---
+# metodos de calculos 
     def calculo_preco_medio_ponderado_compra(self):
-        """Calcula o novo preço médio ponderado após uma compra."""
-        total_investido = (self._current_actions * self._weighted_discount) + (self.quantity * self.unit_cost)
-        total_acoes = self._current_actions + self.quantity
-
-        if total_acoes == 0:
-            return 0.0  # evita divisão por zero
-
-        nova_media_ponderada = total_investido / total_acoes
-
-        # atualiza internamente o preço médio e as ações
-        self._weighted_discount = nova_media_ponderada
-        self._current_actions = total_acoes
-
+        nova_media_ponderada = ((self.current_actions * self.weighted_discount) + (self.quantity * self.unit_cost)) / (self.current_actions + self.quantity)
         return nova_media_ponderada
 
     def __repr__(self):

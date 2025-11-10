@@ -38,7 +38,7 @@ def calculando_ganho_capital(operacao, valor, quantidade, preco_pd, acao_atual):
 if __name__ == "__main__":
     entrada_dados = [
         {"operation": "buy", "unit_cost": 20.00, "quantity": 10},
-        {"operation": "sell", "unit_cost": 0.00, "quantity": 5},
+        {"operation": "sell", "unit_cost": 10.00, "quantity": 5},
         {"operation": "buy", "unit_cost": 10.00, "quantity": 5},
     ]
 
@@ -50,19 +50,24 @@ if __name__ == "__main__":
     preco_medio_ponderado = 0.0
     quantidade_acoes_atual = 0.0
 
+    lista_preco = []
+    lista_quantidade = []
+
     for db in entrada_dados:
-        resultado = calculando_ganho_capital(
-            db["operation"],
-            db["unit_cost"],
-            db["quantity"],
-            preco_medio_ponderado,
-            quantidade_acoes_atual
-        )
+        lista_preco.append(db["unit_cost"])
+        lista_quantidade.append(db["quantity"])
+        # resultado = calculando_ganho_capital(
+        #     db["operation"],
+        #     db["unit_cost"],
+        #     db["quantity"],
+        #     preco_medio_ponderado,
+        #     quantidade_acoes_atual
+        # )
 
-        preco_medio_ponderado = precos_acoes["preco_pd"]
-        quantidade_acoes_atual = precos_acoes["acoes"]
+        # preco_medio_ponderado = precos_acoes["preco_pd"]
+        # quantidade_acoes_atual = precos_acoes["acoes"]
 
-        resultados.append(resultado)
+        # resultados.append(resultado)
 
     print("Resultado do cálculo:")
     print(resultados)
@@ -72,5 +77,5 @@ if __name__ == "__main__":
     #nova-media-ponderada = ((quantidade-de-acoes-atual * media-ponderada-atual) 
     # + (quantidade-de-acoes-compradas * valor-de-compra)) 
     # / (quantidade-de-acoes-atual + quantidade-de-acoes-compradas)
-    nova_media_ponderada = ((5.0 * 20.0) + ( 5 * 10.00)) / (5 + 5)
-    print("nova media ponderada --> ",np.average([20.0,10.0,10.0], weights=[10,5,5]))
+    nova_media_ponderada = np.average(lista_preco, weights=lista_quantidade)
+    print("nova media ponderada --> ",nova_media_ponderada)

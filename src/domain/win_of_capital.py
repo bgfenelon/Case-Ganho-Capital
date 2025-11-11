@@ -1,43 +1,61 @@
 class WinOfCapital:
-    def __init__(self, operation: str, unit_cost: float = 0.0, quantity: float = 0.0, 
-                 weighted_discount: float = 0.0, current_actions: float = 0.0):
+    def __init__(self):
+        self.lucro = []
+        self.lista_preco = []
+        self.lista_quantidade = []
+        self.lista_imposto = []
+        self.preco_medio = 0.0
+        self.quantidade_atual = 0
+        self.prejuizo_acumulado = 0.0
+        self.imposto_total = 0.0
 
-        self.operation = operation
-        self.unit_cost = unit_cost
-        self.quantity = quantity
+    def processar_operacoes(self, entrada_dados: list):
 
-        # Usa atributos privados para evitar loop nas properties
-        self._weighted_discount = weighted_discount
-        self._current_actions = current_actions
+        for op in entrada_dados:
+            tipo = op["operation"]
+            preco = op["unit-cost"]
+            qtd = op["quantity"]
 
-    # --- Getter e Setter de weighted_discount ---
-    @property
-    def weighted_discount(self):
-        return self._weighted_discount
+            if tipo == "buy":
+                self.comprar(preco, qtd)
+            elif tipo == "sell":
+                self.vender(preco, qtd)
+            else:
+                raise ValueError(f"Operação desconhecida: {tipo}")
 
-    @weighted_discount.setter
-    def weighted_discount(self, valor):
-        if valor < 0:
-            raise ValueError("O preço médio ponderado não pode ser negativo.")
-        self._weighted_discount = valor
+    def comprar(self, preco, qtd):
+        self.preco_medio = ((self.preco_medio * self.quantidade_atual) + (preco * qtd)) / (self.quantidade_atual + qtd)
+        self.quantidade_atual += qtd
+        imposto = 0.0
+        self.lista_imposto.append({"tax": imposto})
 
-    # --- Getter e Setter de current_actions ---
-    @property
-    def current_actions(self):
-        return self._current_actions
+    def vender(self, preco, qtd):
+        if qtd > self.quantidade_atual:
+            raise ValueError("Tentando vender mais ações do que possui!")
 
-    @current_actions.setter
-    def current_actions(self, valor):
-        if valor < 0:
-            raise ValueError("A quantidade de ações não pode ser negativa.")
-        self._current_actions = valor
+        resultado = (preco - self.preco_medio) * qtd
 
-# metodos de calculos 
-    def calculo_preco_medio_ponderado_compra(self):
-        nova_media_ponderada = ((self.current_actions * self.weighted_discount) + (self.quantity * self.unit_cost)) / (self.current_actions + self.quantity)
-        return nova_media_ponderada
+        if resultado < 0:
+            self.prejuizo_acumulado += abs(resultado)
+            imposto = 0.0
+        elif (resultado <= 20000.00):
+            imposto = 0.0
+            if resultado < 0:
+                    self.prejuizo_acumulado += abs(resultado)
+        else:
+            lucro_liquido = resultado - self.prejuizo_acumulado
+            if lucro_liquido > 0:
+                imposto = lucro_liquido * 0.20
+                self.imposto_total += imposto
+                self.prejuizo_acumulado = 0.0
+            else:
+                imposto = 0.0
+                self.prejuizo_acumulado = abs(lucro_liquido)
 
-    def __repr__(self):
-        tipo = "Venda" if self.operation.lower() == "sell" else "Compra"
-        return (f"<{tipo}: {self.quantity} unidades a R${self.unit_cost:.2f}, "
-                f"PM: R${self._weighted_discount:.2f}, Ações: {self._current_actions}>")
+        self.quantidade_atual -= qtd
+        self.lista_imposto.append({"tax": imposto})
+        self.lucro.append(resultado)
+
+    def get_lista_imposto(self):
+            return self.lista_imposto
+

@@ -5,14 +5,14 @@ import os
 # Corrige o caminho para permitir importações de src.domain e src.utils
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
-from src.domain.win_of_capital import WinOfCapital
+from src.domain.ganho_capital_imposto import GanhoCapitalImposto
 from src.utils.executar_lista_dados import executando_lista_entrada
 
 
 class TestCalcularGanhoCapital(unittest.TestCase):
 
     def setUp(self):
-        self.calc = WinOfCapital()
+        self.calc = GanhoCapitalImposto()
 
     def test_case_1(self):
         entrada_dados = [{"operation":"buy", "unit-cost":10.00, "quantity": 100},

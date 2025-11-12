@@ -1,4 +1,4 @@
-class WinOfCapital:
+class GanhoCapitalImposto:
     def __init__(self):
         self.lucro = []
         self.lista_preco = []
@@ -33,15 +33,19 @@ class WinOfCapital:
         if qtd > self.quantidade_atual:
             raise ValueError("Tentando vender mais ações do que possui!")
 
+        valor_total_venda = preco * qtd
         resultado = (preco - self.preco_medio) * qtd
 
-        if resultado < 0:
-            self.prejuizo_acumulado += abs(resultado)
-            imposto = 0.0
-        elif (resultado <= 20000.00):
+
+        if valor_total_venda <= 20000:
             imposto = 0.0
             if resultado < 0:
-                    self.prejuizo_acumulado += abs(resultado)
+                self.prejuizo_acumulado += abs(resultado)
+
+        elif resultado < 0:
+            self.prejuizo_acumulado += abs(resultado)
+            imposto = 0.0
+
         else:
             lucro_liquido = resultado - self.prejuizo_acumulado
             if lucro_liquido > 0:
